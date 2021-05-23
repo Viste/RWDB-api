@@ -56,12 +56,10 @@ class RWDBAPI:
         
         mySqlListdbs = "show databeses;"
         mySQLCursor.execute(mySqlListdbs)
-       
-        # get all users
-        dbList = mySQLCursor.fetchall()
-        print("List of databases:")
-        for db in dbList:
-            print(db)
+
+        databaseList  = mySQLCursor.fetchall()
+        for datatbase in databaseList:
+            print(datatbase))
 
     def on_post(self, req, resp):
         create = {
