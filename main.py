@@ -9,7 +9,20 @@ config = {
 }
 
 class RWDBAPI:
-    def createUser(self, cursor, userName, password):
+    def getUserlist(self)
+        cnx = mysql.connector.connect(**config)
+        cursor = cnx.cursor()
+        try:
+            sqlgetUser = ""
+            cursor.execute(sqlgetUser)
+        except Exception as Ex:
+            print("Error creating MySQL User: %s"%(Ex))
+
+        # close db connect
+        cursor.close()
+        cnx.close()
+
+    def createUser(self, cursor, login, password):
         cnx = mysql.connector.connect(**config)
         cursor = cnx.cursor()
         try:
@@ -18,8 +31,12 @@ class RWDBAPI:
         except Exception as Ex:
             print("Error creating MySQL User: %s"%(Ex))
 
-        createUser(cursor, "test1","a$be@ter12")
-        createUser(cursor, "test2", "x@ye@iog43")
+       # createUser(cursor, "test1","a$be@ter12") test case 1
+       # createUser(cursor, "test2", "x@ye@iog43") test case 2
+	
+	# close db connect
+	cursor.close()
+        cnx.close()
         
     def createdb(self, cursor, dbname):
         cnx = mysql.connector.connect(**config)
@@ -30,14 +47,17 @@ class RWDBAPI:
         except Exception as Ex:
             print("Error creating MySQL User: %s"%(Ex))
 
-        createUser(mySQLCursor, "somedb")
+        #createUser(cursor, "somedb") test case
         
         mySqlListdbs = "show databeses;"
         cursor.execute(mySqlListdbs)
 
-        databaseList  = mySQLCursor.fetchall()
-        for datatbase in databaseList:
+        for database in cursor:
             print(datatbase))
+
+        # close db connect
+        cursor.close()
+        cnx.close()
 
     def on_post(self, req, resp):
         create = {
