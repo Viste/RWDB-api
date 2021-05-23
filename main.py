@@ -1,61 +1,39 @@
 import falcon
-import pymysql
+import mysql.connector
+
+config = {
+  'user': 'root',
+  'password': 'password',
+  'host': '127.0.0.1',
+  'raise_on_warnings': True
+}
 
 class RWDBAPI:
-    def getDBconn(ip, usr, paswd, charset, curtype):
-        sqlCon  = pymysql.connect(host=ip, user=usr, password=paswd, charset=charset, cursorclass=curtype);
-        return sqlCon;
-
-    def createUser(self, cursor, userName, password, querynum=0, updatenum=0, connection_num=0):
+    def createUser(self, cursor, userName, password):
+        cnx = mysql.connector.connect(**config)
+        cursor = cnx.cursor()
         try:
             sqlCreateUser = "CREATE USER '%s'@'%' IDENTIFIED BY '%s';" % (userName, password)
             cursor.execute(sqlCreateUser)
         except Exception as Ex:
             print("Error creating MySQL User: %s"%(Ex))
 
-        # Connection credentials #TODO: move global
-        ip         = "127.0.0.1"
-        usr        = "root"
-        paswd      = "pass"
-        charset    = "utf8mb4"
-        curtype    = pymysql.cursors.DictCursor
-
-        mySQLConnection = getDBconn(ip, usr, paswd, charset, curtype)
-        mySQLCursor     = mySQLConnection.cursor()
-
-        createUser(mySQLCursor, "test1","a$be@ter12")
-        createUser(mySQLCursor, "test2", "x@ye@iog43")
+        createUser(cursor, "test1","a$be@ter12")
+        createUser(cursor, "test2", "x@ye@iog43")
         
-        mySqlListUsers = "select host, user from mysql.user;"
-        mySQLCursor.execute(mySqlListUsers)
-       
-        # get all users
-        userList = mySQLCursor.fetchall()
-        print("List of users:")
-        for user in userList:
-            print(user)
-
-    def createdb(self, cursor, dbname ,querynum=0, updatenum=0, connection_num=0):
+    def createdb(self, cursor, dbname):
+        cnx = mysql.connector.connect(**config)
+        cursor = cnx.cursor()
         try:
             sqlCreatedb   = "CREATE DATABASE %s" % (database)
             cursor.execute(sqlCreatedb)
         except Exception as Ex:
             print("Error creating MySQL User: %s"%(Ex))
 
-        # Connection credentials #TODO: move global
-        ip         = "127.0.0.1"
-        usr        = "root"
-        paswd      = "pass"
-        charset    = "utf8mb4"
-        curtype    = pymysql.cursors.DictCursor
-
-        mySQLConnection = getDBconn(ip, usr, paswd, charset, curtype)
-        mySQLCursor     = mySQLConnection.cursor()
-
         createUser(mySQLCursor, "somedb")
         
         mySqlListdbs = "show databeses;"
-        mySQLCursor.execute(mySqlListdbs)
+        cursor.execute(mySqlListdbs)
 
         databaseList  = mySQLCursor.fetchall()
         for datatbase in databaseList:
